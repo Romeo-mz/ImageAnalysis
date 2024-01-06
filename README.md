@@ -13,3 +13,6 @@ The project is structured as follows:
 - `images/`: Contains the images used for testing.
 - `main.py`: The main script that uses the functions from `image_operations/` to perform operations on images.
 
+## Example Usage
+
+![Example](images/example.png)
