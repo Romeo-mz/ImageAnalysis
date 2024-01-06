@@ -8,18 +8,6 @@ rel_path = "images/"
 img1 = read_image(rel_path + 'test.jpeg')
 img2 = read_image(rel_path + 'text.png')
 
-constL = [
-    [255, 255, 255],
-    [None, 255, None],
-    [0, 0, 0]
-]
-
-constM = [
-    [255, 255, None],
-    [255, 255, 0],
-    [None, 0, 0]
-]
-
 def main():
     fig = plt.figure(figsize=(10, 7))
     rows = 3
