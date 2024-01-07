@@ -96,7 +96,7 @@ def main():
     plt.tight_layout()
 
     # Applying skeletonization by Lantuejoul
-    skeletonization_img = bo.skeletonization(binary_img)
+    skeletonization_img = bo.skeletonization_lantuejoul(binary_img)
     fig.add_subplot(rows, columns, 9)
     plt.imshow(skeletonization_img, cmap='gray')
     plt.axis('off')

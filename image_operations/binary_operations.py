@@ -87,7 +87,7 @@ def thickening(binary, iterations=1):
     return result
 
 
-def skeletonization(img):
+def skeletonization_lantuejoul(img):
     out = np.zeros_like(img)
     before = np.zeros_like(img)
     n = 0
