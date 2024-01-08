@@ -26,7 +26,6 @@ def main():
     threshold_img = bo.threshold(img1, threshold)
     fig.add_subplot(rows, columns, 4)
     plt.imshow(threshold_img, cmap='gray')
-    plt.axis('off')
     plt.title(titles[1])
     plt.xlabel('Threshold: {}'.format(threshold))  # Parameter explanation
 
@@ -49,7 +48,6 @@ def main():
     erosion_img = bo.erosion(threshold_img, 3)
     fig.add_subplot(rows, columns, 5)
     plt.imshow(erosion_img, cmap='gray')
-    plt.axis('off')
     plt.title(titles[2])
     plt.xlabel('Kernel Size: 3')  # Parameter explanation
 
@@ -59,7 +57,8 @@ def main():
     dilation_img = bo.dilation(threshold_img, 3)
     fig.add_subplot(rows, columns, 6)
     plt.imshow(dilation_img, cmap='gray')
-    plt.title(f"{titles[3]} (Kernel Size: 3)")
+    plt.title(titles[3])
+    plt.xlabel('Kernel Size: 3')  # Parameter explanation
     
     plt.tight_layout()
 
@@ -67,23 +66,23 @@ def main():
     opening_img = bo.opening(threshold_img, 3)
     fig.add_subplot(rows, columns, 11)
     plt.imshow(opening_img, cmap='gray')
-    plt.axis('off')
     plt.title('Opening')
+    plt.xlabel('Kernel Size: 3')  # Parameter explanation
 
     # Applying closing
     closing_img = bo.closing(threshold_img, 3)
     fig.add_subplot(rows, columns, 12)
     plt.imshow(closing_img, cmap='gray')
-    plt.axis('off')
     plt.title('Closing')
+    plt.xlabel('Kernel Size: 3')  # Parameter explanation
 
     # Applying thinning
     _, binary_img = cv2.threshold(threshold_img, 127, 1, cv2.THRESH_BINARY)
     thinning_img = zhang_suen(binary_img, 10)
     fig.add_subplot(rows, columns, 7)
     plt.imshow(thinning_img, cmap='gray')
-    plt.axis('off')
     plt.title('Thinning')
+    plt.xlabel('Iterations: 10')  # Parameter explanation
 
     plt.tight_layout()
 
@@ -91,8 +90,8 @@ def main():
     thickening_img = zhang_suen_thicken(binary_img, 7)
     fig.add_subplot(rows, columns, 8)
     plt.imshow(thickening_img, cmap='gray')
-    plt.axis('off')
     plt.title('Thickening')
+    plt.xlabel('Iterations: 7')  # Parameter explanation
 
     plt.tight_layout()
 
