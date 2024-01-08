@@ -4,8 +4,8 @@ import numpy as np
 from image_operations.thinning import zhang_suen
 
 def threshold(img, seuil):
-    img[img < seuil] = 0
-    img[img >= seuil] = 255
+    img[img < seuil] = 0 #Tous les pixels en dessous du seuil deviennent 0
+    img[img >= seuil] = 255 #Tous les pixels au dessus du seuil deviennent 255
     return img
 
 
@@ -71,7 +71,7 @@ def thinning(img, iterations=1):
     result = img.copy()
 
     for _ in range(iterations):
-        result = np.logical_and(result, erosion(result, 3))
+        result = np.logical_and(result, erosion(result, 3)) #Les pixels qui se chevauchent deviennent 0
     
     return result
 
@@ -82,19 +82,18 @@ def thickening(binary, iterations=1):
     kernel_size = 2
 
     for _ in range(iterations):
-        result = np.logical_or(result, dilation(result, kernel_size))
+        result = np.logical_or(result, dilation(result, kernel_size)) #Les pixels qui se chevauchent deviennent 1
 
     return result
 
 
-def skeletonization_lantuejoul(img):
+def lantuejoul_skeletonization(img):
     out = np.zeros_like(img)
     before = np.zeros_like(img)
     n = 0
     max_iterations = 1
-    threshold_difference = 10
 
-    while n < max_iterations:
+    while True:
         before = np.copy(out)
 
         eroded = erosion(img, n)
@@ -103,14 +102,14 @@ def skeletonization_lantuejoul(img):
 
         out = addition(out, sub)
 
-        diff = np.sum(np.abs(out - before))
-        print(f"Iteration {n + 1}: Difference: {diff}")
-
-        if diff < threshold_difference:
+        if np.array_equal(out, before):
             print("Converged!")
             break
 
         n += 1
+        if n >= max_iterations:
+            print("Max iterations reached!")
+            break
 
     return out
 

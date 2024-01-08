@@ -2,11 +2,12 @@ import cv2
 from matplotlib import pyplot as plt
 import image_operations.binary_operations as bo
 from image_operations.thinning import zhang_suen
+from image_operations.thickening import zhang_suen_thicken
 from image_operations.image_helper import read_image
 
 rel_path = "images/"
 img1 = read_image(rel_path + 'test.jpeg')
-img2 = read_image(rel_path + 'text.png')
+img2 = read_image(rel_path + 'losange.png')
 
 def main():
     fig = plt.figure(figsize=(10, 7))
@@ -19,6 +20,15 @@ def main():
     plt.imshow(img1)
     plt.axis('off')
     plt.title(titles[0])
+
+     # Applying threshold
+    threshold = 127
+    threshold_img = bo.threshold(img1, threshold)
+    fig.add_subplot(rows, columns, 4)
+    plt.imshow(threshold_img, cmap='gray')
+    plt.axis('off')
+    plt.title(titles[1])
+    plt.xlabel('Threshold: {}'.format(threshold))  # Parameter explanation
 
     # Addition
     addition_img = bo.addition(img1, img2)
@@ -34,15 +44,6 @@ def main():
     plt.axis('off')
     plt.title('Subtraction Image')
 
-    
-
-    # Applying threshold
-    threshold = 128
-    threshold_img = bo.threshold(img1, threshold)
-    fig.add_subplot(rows, columns, 4)
-    plt.imshow(threshold_img, cmap='gray')
-    plt.axis('off')
-    plt.title(titles[1])
 
     # Applying erosion
     erosion_img = bo.erosion(threshold_img, 3)
@@ -50,6 +51,7 @@ def main():
     plt.imshow(erosion_img, cmap='gray')
     plt.axis('off')
     plt.title(titles[2])
+    plt.xlabel('Kernel Size: 3')  # Parameter explanation
 
     plt.tight_layout()
 
@@ -57,9 +59,8 @@ def main():
     dilation_img = bo.dilation(threshold_img, 3)
     fig.add_subplot(rows, columns, 6)
     plt.imshow(dilation_img, cmap='gray')
-    plt.axis('off')
-    plt.title(titles[3])
-
+    plt.title(f"{titles[3]} (Kernel Size: 3)")
+    
     plt.tight_layout()
 
     # Applying opening
@@ -78,7 +79,7 @@ def main():
 
     # Applying thinning
     _, binary_img = cv2.threshold(threshold_img, 127, 1, cv2.THRESH_BINARY)
-    thinning_img = zhang_suen(binary_img, 2)
+    thinning_img = zhang_suen(binary_img, 10)
     fig.add_subplot(rows, columns, 7)
     plt.imshow(thinning_img, cmap='gray')
     plt.axis('off')
@@ -87,7 +88,7 @@ def main():
     plt.tight_layout()
 
     # Applying thickening
-    thickening_img = bo.thickening(threshold_img, 3)
+    thickening_img = zhang_suen_thicken(binary_img, 7)
     fig.add_subplot(rows, columns, 8)
     plt.imshow(thickening_img, cmap='gray')
     plt.axis('off')
@@ -96,7 +97,7 @@ def main():
     plt.tight_layout()
 
     # Applying skeletonization by Lantuejoul
-    skeletonization_img = bo.skeletonization_lantuejoul(binary_img)
+    skeletonization_img = bo.lantuejoul_skeletonization(binary_img)
     fig.add_subplot(rows, columns, 9)
     plt.imshow(skeletonization_img, cmap='gray')
     plt.axis('off')
@@ -108,6 +109,7 @@ def main():
     plt.imshow(homotopic_skeletonization, cmap='gray')
     plt.axis('off')
     plt.title('Homotopic skeletonization')
+
 
     plt.tight_layout()
 

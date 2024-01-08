@@ -1,30 +1,30 @@
 import numpy as np
-
-def zhang_suen(binary, num_iter=1):
+def zhang_suen_thicken(binary, num_iter=1):
     output = np.pad(binary, 1, mode="constant", constant_values=0)
     ROW, COL = output.shape
 
     for _ in range(num_iter):
         # iteration 1
-        deleted = np.zeros((ROW, COL), dtype=bool)
+        added = np.zeros((ROW, COL), dtype=bool)
         for i in range(1, ROW - 1):
             for j in range(1, COL - 1):
-                if output[i, j] == 1:
+                if output[i, j] == 0:
                     curr = output[i - 1 : i + 2, j - 1 : j + 2]
-                    if rule1(curr) and rule2(curr) and (rule3_1(curr) or rule3_2(curr)):
-                        deleted[i, j] = True
+                    if rule1_thicken(curr) and rule2_thicken(curr) and (rule3_1(curr) or rule3_2(curr)):
+                        added[i, j] = True
 
-        # Apply deletion of marked pixels
-        output[1:-1, 1:-1][deleted[1:-1, 1:-1]] = 0
+        # Apply addition of marked pixels
+        output[1:-1, 1:-1][added[1:-1, 1:-1]] = 1  # Set marked pixels to 1 to thicken lines
 
     return output[1:-1, 1:-1]
 
-def rule1(patch):
-    num_neigh = np.sum(patch) - 1
+
+def rule1_thicken(patch):
+    num_neigh = 8 - np.sum(patch)  # Inverting the condition for thickening
     return 2 <= num_neigh <= 6
 
 
-def rule2(patch):
+def rule2_thicken(patch):
     neighbors = [
         patch[0, 0], patch[0, 1], patch[0, 2],
         patch[1, 2], patch[2, 2], patch[2, 1],
@@ -32,7 +32,7 @@ def rule2(patch):
     ]
     count = 0
     for i in range(8):
-        if neighbors[i] == 0 and neighbors[i + 1] == 1:
+        if neighbors[i] == 1 and neighbors[i + 1] == 0:  # Adjusted condition for thickening
             count += 1
     return count == 1
 
