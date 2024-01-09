@@ -41,6 +41,9 @@ def apply_operations(img, operation, img2=img2, threshold_value=127, kernel_size
 @app.route('/', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
+        if 'reset' in request.form:
+            # Handle reset action, redirect back to the image_operations page
+            return redirect(url_for('image_operations', filename=filename))
         file = request.files['file']
         if file:
             filename = secure_filename(file.filename)
