@@ -7,7 +7,7 @@ from image_operations.image_helper import read_image
 
 rel_path = "images/"
 img1 = read_image(rel_path + 'test.jpeg')
-img2 = read_image(rel_path + 'losange.png')
+img2 = read_image(rel_path + 'text.png')
 
 def main():
     fig = plt.figure(figsize=(10, 7))
@@ -21,6 +21,12 @@ def main():
     plt.axis('off')
     plt.title(titles[0])
 
+    # Reading the copy image
+    # fig.add_subplot(rows, columns, 13)
+    # plt.imshow(img2)
+    # plt.axis('off')
+    # plt.title('Copy Image')
+    
      # Applying threshold
     threshold = 127
     threshold_img = bo.threshold(img1, threshold)
