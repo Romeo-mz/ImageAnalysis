@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Processed Image</title>
+</head>
+<body>
+    <h1>Processed Image</h1>
+    <img src="{{ url_for('static', filename='uploads/' + filename) }}" alt="Processed Image">
+
+    <form action="{{ url_for('image_operations', filename=filename) }}" method="post">
+        <label for="operation">Choose an operation:</label>
+        <select name="operation" id="operation">
+            <option value="threshold">Threshold</option>
+            <option value="addition">Addition</option>
+            <option value="subtraction">Subtraction</option>
+            <!-- Add other operation options here -->
+        </select>
+        <br><br>
+        <!-- Additional fields for parameters -->
+        <label for="threshold_value">Threshold Value:</label>
+        <input type="number" name="threshold_value" id="threshold_value" value="127">
+        <br><br>
+        <label for="kernel_size">Kernel Size:</label>
+        <input type="number" name="kernel_size" id="kernel_size" value="3">
+        <br><br>
+        <label for="iterations">Iterations:</label>
+        <input type="number" name="iterations" id="iterations" value="10">
+        <br><br>
+        <input type="submit" value="Apply">
+    </form>
+</body>
+</html>
