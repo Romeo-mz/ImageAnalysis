@@ -121,36 +121,75 @@ def thickening(binary, iterations=1):
     return result
 
 
-def lantuejoul_skeletonization(img):
-    """
-    Effectue une squelettisation de Lantuejoul sur l'image binaire en utilisant des opérations morphologiques.
-    La squelettisation est itérativement appliquée jusqu'à convergence.
-    """
-    out = np.zeros_like(img)
-    before = np.zeros_like(img)
-    n = 0
-    max_iterations = 1
+# def lantuejoul_skeletonization(img):
+#     """
+#     Effectue une squelettisation de Lantuejoul sur l'image binaire en utilisant des opérations morphologiques.
+#     La squelettisation est itérativement appliquée jusqu'à convergence.
+#     """
+#     out = np.zeros_like(img)
+#     before = np.zeros_like(img)
+#     n = 0
+#     max_iterations = 1
 
+#     while True:
+#         before = np.copy(out)
+
+#         eroded = erosion(img, n)
+#         opened = opening(eroded, 1)
+#         sub = subtraction(eroded, opened)
+
+#         out = addition(out, sub)
+
+#         if np.array_equal(out, before):
+#             print("Converged!")
+#             break
+
+#         n += 1
+#         if n >= max_iterations:
+#             print("Max iterations reached!")
+#             break
+
+#     return out
+
+def lantuejoul_skeletonization(image):
+    """
+    Applies the Lantuejoul skeletonization algorithm on a binary image.
+
+        @param image - The binary image to be skeletonized
+
+        @return The skeletonized image
+    """
+
+    skeleton = np.zeros_like(image)
+    lambda_value = 1
+    
     while True:
-        before = np.copy(out)
-
-        eroded = erosion(img, n)
-        opened = opening(eroded, 1)
-        sub = subtraction(eroded, opened)
-
-        out = addition(out, sub)
-
-        if np.array_equal(out, before):
-            print("Converged!")
+        # Éroder l'image λ fois
+        eroded_image = image.copy()
+        for _ in range(lambda_value):
+            eroded_image = erosion(eroded_image, 3)  # Utilisation d'un élément structurant de taille fixe pour l'érosion
+        
+        # Si l'image érodée est entièrement érodée (aucun pixel blanc), arrêter l'itération
+        if not np.any(eroded_image):
             break
+        
+        # Ouvrir l'image érodée λ fois
+        opened_image = eroded_image.copy()
+        for _ in range(lambda_value):
+            opened_image = opening(opened_image, 3)  # Utilisation d'un élément structurant de taille fixe pour l'ouverture
+        
+        # Soustraire l'image ouverte de l'image érodée pour obtenir la composante du squelette
+        skeleton_component = subtraction(eroded_image, opened_image)
+        
+        # Faire l'union de cette composante avec le squelette global
+        skeleton = addition(skeleton, skeleton_component)
+        
+        # Incrémenter λ pour la prochaine itération
+        lambda_value += 1
 
-        n += 1
-        if n >= max_iterations:
-            print("Max iterations reached!")
-            break
+    skeleton = closing(skeleton, 3)
 
-    return out
-
+    return skeleton
 
 def homotopic_skeletonization(img):
     """
